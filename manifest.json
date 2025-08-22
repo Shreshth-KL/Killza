@@ -1,0 +1,16 @@
+{
+  "name": "Killza Tournament",
+  "short_name": "Killza",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#10011a",
+  "theme_color": "#10011a",
+  "description": "Your one-stop place for gaming tournaments.",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/V0BC4pJz/AI-Generated-Image-2025-06-25.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
