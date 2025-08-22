@@ -143,14 +143,17 @@
         .btn-custom:active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); }
         .auth-modal-content .btn-custom-link { background: none; border: none; color: var(--dynamic-accent); font-size: 0.9rem; padding: 5px; cursor: pointer; }
 
-        /* --- START: Styles for Phone Auth Modal --- */
         .phone-input-view, .otp-input-view {
             display: none;
         }
         .phone-input-view.active, .otp-input-view.active {
             display: block;
         }
-        /* --- END: Styles for Phone Auth Modal --- */
+        #recaptcha-container {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+        }
 
         .section-title { font-family: 'Oswald', sans-serif; font-size: 1.5rem; font-weight: 500; margin-bottom: 20px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 1px; text-align: left; }
         #globalLoaderEl { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; display: none; }
@@ -374,7 +377,6 @@
         #logoutProfileBtnEl, #logoutProfileBtnEl i { color: var(--danger-color); }
         .form-check-input:checked { background-color: #ff8c00; border-color: #ff8c00; }
         
-        /* --- FINAL SETTINGS STYLES --- */
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; font-size: 1rem; color: var(--text-primary); }
         .setting-item-column { padding: 10px 5px; }
         .setting-item i, .setting-item-column .form-label { margin-right: 15px; color: var(--text-secondary); }
@@ -404,7 +406,6 @@
         #securityWarning, #emailVerificationWarning { background-color: var(--warning-color); color: #111; padding: 10px 15px; text-align: center; font-size: 0.85rem; display: none; position: fixed; top: 60px; left: 0; width: 100%; z-index: 2000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         #securityWarning a, #securityWarning button { color: #000; font-weight: 600; text-decoration: underline; }
         #securityWarning button { background: none; border: none; font-size: 1.2rem; float: right; line-height: 1; padding: 0 5px; }
-        #emailVerificationWarning #resendVerificationBtn { background: none; border: 1px solid #000; border-radius: 4px; padding: 2px 8px; margin-left: 10px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 
@@ -415,10 +416,6 @@
         <a href="https://firebase.google.com/docs/database/security" target="_blank" rel="noopener noreferrer">Learn how to fix this.</a>
         <button onclick="this.parentElement.style.display='none'">&times;</button>
     </div>
-    
-    <!-- START: EMAIL VERIFICATION WARNING REMOVED -->
-    <!-- The email verification warning div has been removed -->
-    <!-- END: EMAIL VERIFICATION WARNING REMOVED -->
 
     <header class="app-header"> 
         <div class="header-left"> 
@@ -448,34 +445,12 @@
         </div>
     </div>
     
-    <div class="auth-modal-overlay" id="authModalOverlayEl"> 
-        <div class="auth-modal-content"> 
-            <button class="auth-modal-close" id="authModalCloseBtnEl">&times;</button> 
-            <form id="emailLoginForm" style="display: none;"> 
-                <h2 class="auth-modal-title">Login</h2> 
-                <div class="mb-3"> <label for="loginEmailInputEl" class="form-label">Email</label> <input type="email" class="form-control" id="loginEmailInputEl" placeholder="you@killza.gg" required> </div> 
-                <div class="mb-3"> <label for="loginPasswordInputEl" class="form-label">Password</label> <input type="password" class="form-control" id="loginPasswordInputEl" placeholder="••••••••" required> </div> 
-                <div id="loginStatusMessageEl" class="alert mt-3" style="display: none;"></div> 
-                <div class="d-grid gap-2 mb-3"> <button type="button" class="btn btn-custom" id="loginEmailBtnEl">Login</button> <a href="#" id="forgotPasswordLinkEl" class="text-center small mt-2 d-block" style="color: var(--text-secondary);">Forgot Password?</a> </div> 
-                <div class="text-center"> <button type="button" class="btn-custom-link btn-sm p-0" id="showSignupToggleBtnEl">Need an account? Sign Up</button> </div> 
-            </form> 
-            <form id="emailSignupForm" style="display: none;"> 
-                <h2 class="auth-modal-title">Create Account</h2> 
-                <div class="mb-3"> <label for="signupEmailInputEl" class="form-label">Email</label> <input type="email" class="form-control" id="signupEmailInputEl" placeholder="you@killza.gg" required> </div> 
-                <div class="mb-3"> <label for="signupPasswordInputEl" class="form-label">Password (min 6 chars)</label> <input type="password" class="form-control" id="signupPasswordInputEl" placeholder="••••••••" required minlength="6"> </div> 
-                <div class="mb-3"> <label for="signupConfirmPasswordInputEl" class="form-label">Confirm Password</label> <input type="password" class="form-control" id="signupConfirmPasswordInputEl" placeholder="••••••••" required> </div> 
-                <div class="mb-3"> <label for="signupReferralCodeInputEl" class="form-label">Referral Code (Optional)</label> <input type="text" class="form-control" id="signupReferralCodeInputEl" placeholder="Enter referral code"> </div> 
-                <div id="signupStatusMessageEl" class="alert mt-3" style="display: none;"></div> 
-                <div class="d-grid gap-2 mb-3"> <button type="button" class="btn btn-custom" id="signupEmailBtnEl">Sign Up</button> </div> 
-                <div class="text-center"> <button type="button" class="btn-custom-link btn-sm p-0" id="showLoginToggleBtnEl">Already have account? Login</button> </div> 
-            </form> 
-        </div> 
-    </div>
-
+    <div class="auth-modal-overlay" id="authModalOverlayEl"> <div class="auth-modal-content"> <button class="auth-modal-close" id="authModalCloseBtnEl">&times;</button> <form id="emailLoginForm" style="display: none;"> <h2 class="auth-modal-title">Login</h2> <div class="mb-3"> <label for="loginEmailInputEl" class="form-label">Email</label> <input type="email" class="form-control" id="loginEmailInputEl" placeholder="you@killza.gg" required> </div> <div class="mb-3"> <label for="loginPasswordInputEl" class="form-label">Password</label> <input type="password" class="form-control" id="loginPasswordInputEl" placeholder="••••••••" required> </div> <div id="loginStatusMessageEl" class="alert mt-3" style="display: none;"></div> <div class="d-grid gap-2 mb-3"> <button type="button" class="btn btn-custom" id="loginEmailBtnEl">Login</button> <a href="#" id="forgotPasswordLinkEl" class="text-center small mt-2 d-block" style="color: var(--text-secondary);">Forgot Password?</a> </div> <div class="text-center"> <button type="button" class="btn-custom-link btn-sm p-0" id="showSignupToggleBtnEl">Need an account? Sign Up</button> </div> </form> <form id="emailSignupForm" style="display: none;"> <h2 class="auth-modal-title">Create Account</h2> <div class="mb-3"> <label for="signupEmailInputEl" class="form-label">Email</label> <input type="email" class="form-control" id="signupEmailInputEl" placeholder="you@killza.gg" required> </div> <div class="mb-3"> <label for="signupPasswordInputEl" class="form-label">Password (min 6 chars)</label> <input type="password" class="form-control" id="signupPasswordInputEl" placeholder="••••••••" required minlength="6"> </div> <div class="mb-3"> <label for="signupConfirmPasswordInputEl" class="form-label">Confirm Password</label> <input type="password" class="form-control" id="signupConfirmPasswordInputEl" placeholder="••••••••" required> </div> <div class="mb-3"> <label for="signupReferralCodeInputEl" class="form-label">Referral Code (Optional)</label> <input type="text" class="form-control" id="signupReferralCodeInputEl" placeholder="Enter referral code"> </div> <div id="signupStatusMessageEl" class="alert mt-3" style="display: none;"></div> <div class="d-grid gap-2 mb-3"> <button type="button" class="btn btn-custom" id="signupEmailBtnEl">Sign Up</button> </div> <div class="text-center"> <button type="button" class="btn-custom-link btn-sm p-0" id="showLoginToggleBtnEl">Already have account? Login</button> </div> </form> </div> </div> 
+    
     <!-- START: PHONE AUTH MODAL -->
     <div class="auth-modal-overlay" id="phoneAuthModalEl">
         <div class="auth-modal-content">
-            <div id="phone-input-view" class="active">
+            <div id="phone-input-view" class="phone-input-view active">
                 <h2 class="auth-modal-title">Verify Phone Number</h2>
                 <p class="text-secondary text-center small mb-4">For security, please verify your phone number to continue.</p>
                 <div class="mb-3">
@@ -486,14 +461,15 @@
                     </div>
                 </div>
                 <div id="phoneStatusMessageEl" class="alert mt-3" style="display: none;"></div>
-                <div class="d-grid gap-2 mb-3">
+                <div class="d-grid gap-2">
                     <button type="button" class="btn btn-custom" id="sendOtpBtnEl">Send OTP</button>
+                    <button type="button" class="btn btn-sm btn-custom-link" id="cancelPhoneAuthBtnEl">Cancel</button>
                 </div>
             </div>
 
             <div id="otp-input-view" class="otp-input-view">
                 <h2 class="auth-modal-title">Enter OTP</h2>
-                <p class="text-secondary text-center small mb-4">An OTP has been sent to your number. Please enter it below.</p>
+                <p id="otpSentToMsg" class="text-secondary text-center small mb-4">An OTP has been sent. Please enter it below.</p>
                 <div class="mb-3">
                     <label for="otpInputEl" class="form-label">6-Digit OTP</label>
                     <input type="text" class="form-control" id="otpInputEl" placeholder="••••••" required maxlength="6">
@@ -503,7 +479,6 @@
                     <button type="button" class="btn btn-custom" id="verifyOtpBtnEl">Verify & Login</button>
                 </div>
             </div>
-             <!-- This div is required for Firebase reCAPTCHA -->
              <div id="recaptcha-container"></div>
         </div>
     </div>
@@ -873,7 +848,6 @@
             addInfoModalEl: getElement('addInfoModalEl'), addInfoTitleEl: getElement('addInfoTitleEl'), infoModalWalletBalance: getElement('infoModalWalletBalance'), infoModalEntryFee: getElement('infoModalEntryFee'), infoModalTotalAmount: getElement('infoModalTotalAmount'), infoModalSlotsList: getElement('infoModalSlotsList'), infoModalStatusMessageEl: getElement('infoModalStatusMessageEl'), infoModalCancelBtn: getElement('infoModalCancelBtn'), infoModalConfirmJoinBtn: getElement('infoModalConfirmJoinBtn'),
             playerDetailsOverlayEl: getElement('playerDetailsOverlayEl'), playerDetailsContentEl: getElement('playerDetailsContentEl'), playerDetailsModalLabel: getElement('playerDetailsModalLabel'), inGameNameInput: getElement('inGameNameInput'), inGameIdInput: getElement('inGameIdInput'), savePlayerDetailsBtn: getElement('savePlayerDetailsBtn'), playerDetailsStatusMessageEl: getElement('playerDetailsStatusMessageEl'), playerDetailsCloseBtn: getElement('playerDetailsCloseBtn'), playerDetailsCancelBtn: getElement('playerDetailsCancelBtn'),
             notificationPanel: getElement('notificationPanelEl'), notificationList: getElement('notificationListEl'), notificationPanelCloseBtn: getElement('notificationPanelCloseBtnEl'), noNotificationsMessage: getElement('noNotificationsMessageEl'),
-            // --- START: PHONE AUTH ELEMENTS ---
             phoneAuthModalEl: getElement('phoneAuthModalEl'),
             phoneInputView: getElement('phone-input-view'),
             otpInputView: getElement('otp-input-view'),
@@ -883,18 +857,15 @@
             verifyOtpBtnEl: getElement('verifyOtpBtnEl'),
             phoneStatusMessageEl: getElement('phoneStatusMessageEl'),
             otpStatusMessageEl: getElement('otpStatusMessageEl'),
-            // --- END: PHONE AUTH ELEMENTS ---
+            cancelPhoneAuthBtnEl: getElement('cancelPhoneAuthBtnEl'),
+            otpSentToMsg: getElement('otpSentToMsg'),
         };
         let currentUser = null; let userProfile = {}; let currentSectionId = 'login-section'; let dbListeners = {};
         let swiperInstance; let currentTournamentGameId = null; let appSettings = {};
         let isShowingMyMatches = false; let validReferrerUid = null; let temporaryTeamInfo = {}; let lastTournamentDetailsId = null; 
         
-        // --- START: PHONE AUTH GLOBALS ---
         let confirmationResult;
-        // --- END: PHONE AUTH GLOBALS ---
-
-
-        // --- THEME MANAGEMENT ---
+        
         function setTheme(theme) {
             document.body.classList.remove('light-theme', 'dark-theme', 'killza-theme');
             
@@ -915,7 +886,6 @@
             setTheme(savedTheme);
         }
 
-        // --- ANIMATION HELPER ---
         function animateSectionContent(sectionId) {
             const section = getElement(sectionId);
             if (!section) return;
@@ -1105,7 +1075,7 @@
                     break;
                  }
              }
-             if (sectionId === 'login-section') { hideAuthModal(); } 
+             if (sectionId === 'login-section') { hideAuthModal(); hidePhoneAuthModal(); } 
              window.scrollTo(0, 0);
          }
          function updateHeaderForSection(sectionId) {
@@ -1207,14 +1177,12 @@
                      const snapshot = await get(userRef);
                      if (snapshot.exists()) { 
                         userProfile = snapshot.val(); 
-                        // --- START: PHONE VERIFICATION CHECK ---
                         if (!userProfile.phoneNumber) {
                             showLoader(false);
                             elements.phoneAuthModalEl.classList.add('visible');
                             setupRecaptcha();
-                            return; // Stop further execution until phone is verified
+                            return; 
                         }
-                        // --- END: PHONE VERIFICATION CHECK ---
                      } else {
                          console.log("New user, creating profile...");
                          const newUserProfile = { uid: user.uid, displayName: user.displayName || user.email?.split('@')[0] || 'User', email: user.email || null, photoURL: user.photoURL || null, balance: appSettings.newUserBalance || 0, winningCash: 0, bonusCash: appSettings.newUserBonus ?? 500, totalMatches: 0, wonMatches: 0, totalEarnings: 0, referralEarnings: 0, createdAt: Date.now(), referralCode: generateReferralCode(), joinedTournaments: {}, isAdmin: false, lastCheckedNotifications: 0, notificationsEnabled: true, ...(localReferrerUid && { referredBy: localReferrerUid }) };
@@ -1226,12 +1194,10 @@
                              try { await runTransaction(referrerRef, (referrerData) => { if (referrerData) { referrerData.balance = (referrerData.balance || 0) + appSettings.referralBonus; referrerData.bonusCash = (referrerData.bonusCash || 0) + appSettings.referralBonus; referrerData.referralEarnings = (referrerData.referralEarnings || 0) + appSettings.referralBonus; } return referrerData; }); await recordTransaction(localReferrerUid, 'referral_bonus', appSettings.referralBonus, `Referral Bonus from ${newUserProfile.displayName || newUserProfile.email}`);
                              } catch (referrerError) { console.error("Error awarding referrer bonus:", referrerError); }
                          }
-                         // --- START: PHONE VERIFICATION FOR NEW USER ---
                          showLoader(false);
                          elements.phoneAuthModalEl.classList.add('visible');
                          setupRecaptcha();
-                         return; // Stop further execution
-                         // --- END: PHONE VERIFICATION FOR NEW USER ---
+                         return; 
                      }
                      populateUserInfo(user, userProfile); 
                      setupRealtimeListeners(user.uid); 
@@ -1248,22 +1214,33 @@
              showLoader(false);
         }
 
-        // --- START: PHONE AUTHENTICATION FUNCTIONS ---
+        // --- PHONE AUTHENTICATION FUNCTIONS ---
         function setupRecaptcha() {
             try {
-                if (!window.recaptchaVerifier) {
-                    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                        'size': 'invisible',
-                        'callback': (response) => {
-                            // reCAPTCHA solved, allow signInWithPhoneNumber.
-                            console.log("reCAPTCHA solved");
-                        }
-                    });
-                    window.recaptchaVerifier.render();
+                if(window.recaptchaVerifier) {
+                    window.recaptchaVerifier.clear();
                 }
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, getElement('recaptcha-container'), {
+                    'size': 'invisible',
+                    'callback': (response) => {
+                        console.log("reCAPTCHA solved");
+                    }
+                });
+                window.recaptchaVerifier.render();
             } catch (error) {
                 console.error("Recaptcha setup error", error);
                 showStatusMessage(elements.phoneStatusMessageEl, `Recaptcha Error: ${error.message}`, 'danger', false);
+            }
+        }
+        
+        function hidePhoneAuthModal() {
+            if (elements.phoneAuthModalEl) {
+                elements.phoneAuthModalEl.classList.remove('visible');
+                // Reset views
+                elements.phoneInputView.classList.add('active');
+                elements.otpInputView.classList.remove('active');
+                elements.phoneInputEl.value = '';
+                elements.otpInputEl.value = '';
             }
         }
 
@@ -1286,14 +1263,11 @@
                 console.log("OTP sent successfully");
                 elements.phoneInputView.classList.remove('active');
                 elements.otpInputView.classList.add('active');
-                showStatusMessage(elements.otpStatusMessageEl, `OTP sent to ${phoneNumber}`, 'success');
+                elements.otpSentToMsg.textContent = `An OTP has been sent to ${phoneNumber}. Please enter it below.`;
             } catch (error) {
                 console.error("Error sending OTP:", error);
-                showStatusMessage(elements.phoneStatusMessageEl, `Error sending OTP. ${error.code}`, 'danger', false);
-                // Reset reCAPTCHA so user can try again
-                window.recaptchaVerifier.render().then(function(widgetId) {
-                    grecaptcha.reset(widgetId);
-                });
+                showStatusMessage(elements.phoneStatusMessageEl, `Error sending OTP. Please try again.`, 'danger', false);
+                setupRecaptcha(); // Reset recaptcha
             } finally {
                 showLoader(false);
             }
@@ -1311,17 +1285,15 @@
 
             try {
                 await confirmationResult.confirm(code);
-                // OTP is correct!
                 console.log("Phone number verified successfully!");
                 
                 const phoneNumber = `+91${elements.phoneInputEl.value.trim()}`;
                 const userRef = ref(db, `users/${currentUser.uid}`);
                 await update(userRef, { phoneNumber: phoneNumber });
-                userProfile.phoneNumber = phoneNumber; // Update local profile object
-
-                elements.phoneAuthModalEl.classList.remove('visible');
+                userProfile.phoneNumber = phoneNumber; 
                 
-                // Now proceed to the app
+                hidePhoneAuthModal();
+                
                 populateUserInfo(currentUser, userProfile); 
                 setupRealtimeListeners(currentUser.uid); 
                 updateGlobalUI(true);
@@ -1334,9 +1306,7 @@
                 showLoader(false);
             }
         }
-        // --- END: PHONE AUTHENTICATION FUNCTIONS ---
-
-
+       
         async function loadAppSettings() { console.log("Loading App Settings..."); try { const settingsRef = ref(db, 'settings'); const snapshot = await get(settingsRef); if (snapshot.exists()) { appSettings = snapshot.val() || {}; console.log("App Settings Loaded:", appSettings); if (appSettings.logoUrl && elements.appLogo) elements.appLogo.src = appSettings.logoUrl; if (appSettings.minWithdraw && elements.minWithdrawAmount) elements.minWithdrawAmount.textContent = appSettings.minWithdraw; const upiIdEl = document.querySelector('.phonepe-number'); if (upiIdEl) { upiIdEl.textContent = appSettings.upiDetails || '[!!! YOUR UPI ID/NUMBER HERE !!!]'; } const contactInfoPEl = document.querySelector('.modal-body p strong#modalUserEmailEl')?.closest('p'); if(contactInfoPEl && appSettings.supportContact) { contactInfoPEl.innerHTML = contactInfoPEl.innerHTML.replace('[!!! ADMIN CONTACT INFO HERE !!!]', appSettings.supportContact); } } else { console.warn("App Settings not found in database!"); appSettings = {}; } } catch (e) { console.error("Settings load failed", e); appSettings = {}; } }
         
         function loadHomePageData() {
@@ -1725,7 +1695,7 @@
                     await update(userRef, { notificationsEnabled: isEnabled });
                 } catch (error) {
                     console.error("Failed to update notification settings:", error);
-                    e.target.checked = !isEnabled; // Revert switch on error
+                    e.target.checked = !isEnabled; 
                     showCustomAlert('Error', 'Could not save your setting. Please try again.');
                 }
              });
@@ -1739,10 +1709,12 @@
                 });
             });
 
-            // --- START: PHONE AUTH EVENT LISTENERS ---
             elements.sendOtpBtnEl?.addEventListener('click', sendOtp);
             elements.verifyOtpBtnEl?.addEventListener('click', verifyOtp);
-            // --- END: PHONE AUTH EVENT LISTENERS ---
+            elements.cancelPhoneAuthBtnEl?.addEventListener('click', () => {
+                hidePhoneAuthModal();
+                logoutUser();
+            });
 
              elements.notificationBtn?.addEventListener('click', () => toggleNotificationsPanel());
              elements.notificationPanelCloseBtn?.addEventListener('click', () => toggleNotificationsPanel(true));
